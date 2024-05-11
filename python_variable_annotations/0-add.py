@@ -2,21 +2,14 @@
 
 
 """
-Define a function add
+    Basic annotations
 """
 
 
 def add(a: float, b: float) -> float:
     """
-    Add two float numbers and return their sum.
-
-    Parameters:
-    a (float): The first float
-    b (float): The second float
-
-    Returns:
-    float: the sum of the two floats
+        A type-annotated function add that takes
+        a float a and a float b as arguments
+        and returns their sum as a float
     """
-
-return a + b
- 
+    return a + b
