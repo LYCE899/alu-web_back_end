@@ -4,6 +4,7 @@
     Basic annotations
 """
 
+
 def add(a: float, b: float) -> float:
     """
         A type-annotated function add that takes
