@@ -12,6 +12,7 @@ def make_multiplier(multiplier: float) -> Callable[[float], float]:
     """
 
 
+    
     def fn(n: float) -> float:
         """Multiply a float by a multiplier"""
         return n * multiplier
