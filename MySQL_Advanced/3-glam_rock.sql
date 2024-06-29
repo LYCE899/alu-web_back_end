@@ -1,13 +1,12 @@
--- Make sure you are using the correct database
-USE your_database_name;
+-- 3-glam_rock.sql
 
--- Query to list all bands with Glam rock as their main style, ranked by longevity
+-- Select band_name and calculate lifespan in years
 SELECT 
     band_name,
-    IFNULL(YEAR(split), YEAR(CURDATE())) - YEAR(formed) AS lifespan
+    IF(split IS NULL, YEAR(CURDATE()) - formed, split - formed) AS lifespan
 FROM 
     metal_bands
 WHERE 
-    style = 'Glam rock'
+    main_style = 'Glam rock'
 ORDER BY 
     lifespan DESC;
