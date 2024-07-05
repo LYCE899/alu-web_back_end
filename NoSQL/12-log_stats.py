@@ -2,28 +2,24 @@
 """ log stats """
 from pymongo import MongoClient
 
-def main(collection, options=None):
-    """ log stats"""
-    
+def main(collection):
+    """ log stats """
 
-    num_logs = collection.count({})
+    num_logs = collection.count_documents({})
     methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-    results = [0, 0, 0, 0, 0]
-    num_status_check = collection.count({"method": "GET", "path": "/status"})
+    results = {method: 0 for method in methods}
+    num_status_check = collection.count_documents({"method": "GET", "path": "/status"})
+    
     for method in methods:
-        num_method = collection.count({"method": method})
-        results[methods.index(method)] = num_method
+        num_method = collection.count_documents({"method": method})
+        results[method] = num_method
     
     print("{} logs".format(num_logs))
     print("Methods:")
     for method in methods:
-        print("\tmethod {}: {}".format(method, results[methods.index(method)]))
+        print("\tmethod {}: {}".format(method, results[method]))
     
     print("{} status check".format(num_status_check))
-
-
-
-
 
 if __name__ == "__main__":
     client = MongoClient()
