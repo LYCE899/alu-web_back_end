@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import pymongo
 
 def log_stats():
