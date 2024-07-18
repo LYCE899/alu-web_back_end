@@ -1,11 +1,10 @@
-#!/usr/bin/env python3
-"""Basic Flask app that implements i18n and internationalization"""
-
-from flask import Flask, render_template, request, g
-from flask_babel import Babel
+from flask import Flask, request, g, render_template
+from flask_babel import Babel, _
 
 app = Flask(__name__)
+babel = Babel(app)
 
+# User table
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
     2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
@@ -13,53 +12,23 @@ users = {
     4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
 }
 
-
-class Config:
-    """Config class for your application, it deals with babel mostly"""
-    LANGUAGES = ["en", "fr"]
-    BABEL_DEFAULT_LOCALE = "en"
-    BABEL_DEFAULT_TIMEZONE = "UTC"
-
-
-app.config.from_object(Config)
-babel = Babel(app)
-
-
-@babel.localeselector
-def get_locale():
-    """Get locale for your application"""
-    locale = request.args.get('locale')
-    if locale and locale in app.config['LANGUAGES']:
-        return locale
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
-
-
-@app.route('/', methods=['GET'], strict_slashes=False)
-def home():
-    """Home page for your application"""
-    login = False
-    if g.get('user'):
-        login = True
-    return render_template('5-index.html', login=login)
-
-
 def get_user():
-    """Get user information from users dict"""
-    try:
-        login_as = int(request.args.get('login_as'))
-        return users.get(int(login_as))
-    except Exception:
+    login_as = request.args.get('login_as')
+    if login_as is None:
         return None
-
+    try:
+        user_id = int(login_as)
+        return users.get(user_id)
+    except ValueError:
+        return None
 
 @app.before_request
 def before_request():
-    """Before request"""
-    user = get_user()
-    print(user)
-    if user:
-        g.user = user
+    g.user = get_user()
 
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
